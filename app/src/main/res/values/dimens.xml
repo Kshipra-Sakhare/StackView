@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="expanded_elevation">8dp</dimen>
+    <dimen name="collapsed_elevation">4dp</dimen>
+    <dimen name="stack_spacing">-8dp</dimen>
+    <dimen name="expanded_card_height">200dp</dimen>
+    <dimen name="collapsed_card_height">80dp</dimen>
+</resources>
