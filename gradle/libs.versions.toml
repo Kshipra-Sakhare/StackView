@@ -17,7 +17,8 @@ lifecycleVersion = "2.7.0"  # Changed from 'lifecycle' to 'lifecycleVersion'
 coroutinesVersion = "1.7.3" # Changed from 'coroutines' to 'coroutinesVersion'
 activityKtxVersion = "1.8.2"
 roomKtx = "2.6.1"
-runtimeLivedata = "1.7.4" # Changed from 'activityKtx' to 'activityKtxVersion'
+runtimeLivedata = "1.7.4"
+activity = "1.9.3" # Changed from 'activityKtx' to 'activityKtxVersion'
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -58,6 +59,7 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtxVersion" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 
 [plugins]

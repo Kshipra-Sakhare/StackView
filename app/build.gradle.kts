@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.activity)
 
     // Testing
     testImplementation(libs.junit)
@@ -91,7 +92,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-
-
 
 }

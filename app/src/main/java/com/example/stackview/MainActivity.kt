@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,47 +46,49 @@ class MainActivity : ComponentActivity() {
         setContent {
             StackviewTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    // Observe the stackItems and loading state
                     val items by viewModel.stackItems.observeAsState(emptyList())
-                    val isLoading by viewModel.isLoading.observeAsState(initial = true)
+                    val isLoading by viewModel.isLoading.observeAsState(true)
+                    val error by viewModel.error.observeAsState()
 
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
                     ) {
                         when {
-                            isLoading -> {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-                            items.isEmpty() -> {
+                            isLoading -> CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                            error != null -> {
                                 Column(
                                     modifier = Modifier
                                         .align(Alignment.Center)
                                         .padding(16.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Text(
-                                        text = "No items found",
-                                        style = MaterialTheme.typography.bodyLarge
+                                        text = error!!,
+                                        color = MaterialTheme.colorScheme.error,
+                                        textAlign = TextAlign.Center
                                     )
-                                    Button(
-                                        onClick = { viewModel.fetchItems() },
-                                        modifier = Modifier.padding(top = 8.dp)
-                                    ) {
+                                    Button(onClick = { viewModel.retry() }) {
                                         Text("Retry")
                                     }
                                 }
                             }
-                            else -> {
-                                StackViewCompose(
-                                    items = items,
-                                    onItemClick = { itemId ->
-                                        viewModel.toggleItemState(itemId)
-                                    }
-                                )
-                            }
+                            items.isEmpty() -> Text(
+                                text = "No items found",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                            else -> StackViewCompose(
+                                items = items,
+                                isLoading = isLoading,
+                                modifier = Modifier.padding(innerPadding),
+                                onItemClick = { itemId ->
+                                    viewModel.toggleItemState(itemId)
+                                }
+                            )
                         }
                     }
                 }
@@ -112,21 +116,41 @@ fun GreetingPreview() {
 @Composable
 fun StackViewCompose(
     items: List<StackItem>,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit = {}
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        items.forEachIndexed { index, item ->
-            StackItemCard(
-                item = item,
-                index = index,
-                totalItems = items.size,
-                onClick = { onItemClick(item.id) }
-            )
+    if (isLoading) {
+        // Display a loading indicator
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else if (items.isEmpty()) {
+        // Display a "No items found" message
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No items found")
+        }
+    } else {
+        // Display the stack items
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            items.forEachIndexed { index, item ->
+                StackItemCard(
+                    item = item,
+                    index = index,
+                    totalItems = items.size,
+                    onClick = { onItemClick(item.id) }
+                )
+            }
         }
     }
 }

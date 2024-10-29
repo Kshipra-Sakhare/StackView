@@ -4,7 +4,9 @@ data class StackItem(
     val id: String,
     val title: String,
     val description: String,
-    var state: StackItemState = StackItemState.COLLAPSED
+    val footer: String? = null,  // Nullable to handle missing values
+    val ctaText: String? = null, // Nullable to handle missing values
+    val state: StackItemState
 )
 
 enum class StackItemState {
